@@ -4,7 +4,6 @@ const weights = {
   3: [0.09, 0.10, 0.11, 0.11, 0.10, 0.09],
 };
 
-// Generate Kurul input fields dynamically
 function updateKurulInputs() {
   const year = document.getElementById("year").value;
   const container = document.getElementById("kurul-inputs");
@@ -24,10 +23,8 @@ function updateKurulInputs() {
   document.getElementById("result").innerHTML = "";
 }
 
-// Initialize Kurul inputs
 updateKurulInputs();
 
-// Calculate final grade
 function calculateFinalGrade() {
   const year = document.getElementById("year").value;
   const w = weights[year];
@@ -46,7 +43,6 @@ function calculateFinalGrade() {
   const passMark = 60;
   const resultDiv = document.getElementById("result");
 
-  // Animated fade-in
   resultDiv.innerHTML = "";
   const resultText = document.createElement("div");
   resultText.style.opacity = 0;
@@ -66,7 +62,6 @@ function calculateFinalGrade() {
   }, 30);
 }
 
-// Progress bars
 function updateProgressBars(kurulScores, finalScore) {
   const kurulContainer = document.getElementById("kurul-progress-container");
   kurulContainer.innerHTML = "";
@@ -106,7 +101,6 @@ function updateProgressBars(kurulScores, finalScore) {
   finalContainer.appendChild(finalBarContainer);
 }
 
-// Reset
 function resetCalculator() {
   updateKurulInputs();
   document.getElementById("final").value = "";
