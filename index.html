@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kırıkkale Tıp Fakültesi Not Hesaplayıcı</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      padding: 30px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #2b2d42;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      text-align: center;
+      transition: 0.2s;
+    }
+
+    select:focus, input:focus {
+      border-color: #4e73df;
+      outline: none;
+      box-shadow: 0 0 6px rgba(78, 115, 223, 0.3);
+    }
+
+    button {
+      background-color: #4e73df;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-top: 12px;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #2e59d9;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .pass {
+      color: #2e8b57;
+    }
+
+    .fail {
+      color: #e63946;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.85rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Kırıkkale Tıp Fakültesi<br>Not Hesaplayıcı</h1>
+
+    <label for="year">Sınıfınızı Seçin:</label>
+    <select id="year" onchange="updateKurulInputs()">
+      <option value="1">1. Sınıf</option>
+      <option value="2" selected>2. Sınıf</option>
+      <option value="3">3. Sınıf</option>
+    </select>
+
+    <div id="kurul-inputs"></div>
+
+    <input type="number" id="final" placeholder="Yıl Sonu (Final) Notu" min="0" max="100" />
+    <button onclick="calculateFinalGrade()">Ortalama Hesapla</button>
+
+    <div id="result"></div>
+    <footer>© 2025 Kırıkkale Tıp Hesaplayıcı</footer>
+  </div>
+
+  <script>
+    const weights = {
+      1: [0.15, 0.15, 0.15, 0.15],
+      2: [0.08, 0.10, 0.12, 0.12, 0.11, 0.07],
+      3: [0.09, 0.10, 0.11, 0.11, 0.10, 0.09],
+    };
+
+    function updateKurulInputs() {
+      const year = document.getElementById("year").value;
+      const container = document.getElementById("kurul-inputs");
+      container.innerHTML = "";
+      const kurulCount = weights[year].length;
+      for (let i = 1; i <= kurulCount; i++) {
+        const input = document.createElement("input");
+        input.type = "number";
+        input.id = "kurul" + i;
+        input.placeholder = `${i}. Kurul Notu`;
+        input.min = 0;
+        input.max = 100;
+        container.appendChild(input);
+      }
+    }
+
+    updateKurulInputs();
+
+    function calculateFinalGrade() {
+      const year = document.getElementById("year").value;
+      const w = weights[year];
+      const kurulScores = w.map((_, i) => parseFloat(document.getElementById("kurul" + (i + 1)).value) || 0);
+      const finalExam = parseFloat(document.getElementById("final").value) || 0;
+
+      const kurulWeighted = kurulScores.reduce((sum, score, i) => sum + score * w[i], 0);
+      const kurulAverage = kurulWeighted / 0.60;
+      const finalGrade = (kurulAverage * 0.60) + (finalExam * 0.40);
+
+      const passMark = 60;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `Kurul Ortalamanız: <b>${kurulAverage.toFixed(2)}</b><br>
+      Genel Ortalama: <b>${finalGrade.toFixed(2)}</b><br>
+      ${finalGrade >= passMark ? "<span class='pass'>✅ Tebrikler, geçtiniz!</span>" : "<span class='fail'>❌ Maalesef kaldınız.</span>"}`;
+    }
+  </script>
+</body>
+</html>
