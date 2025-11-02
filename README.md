@@ -1,0 +1,1 @@
+# tip-not-hesaplama
